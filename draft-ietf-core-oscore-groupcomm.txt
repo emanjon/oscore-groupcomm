@@ -75,7 +75,7 @@ Table of Contents
    2.  OSCORE Security Context . . . . . . . . . . . . . . . . . . .   5
      2.1.  Management of Group Keying Material . . . . . . . . . . .   7
    3.  The COSE Object . . . . . . . . . . . . . . . . . . . . . . .   8
-     3.1.  Examples: Request . . . . . . . . . . . . . . . . . . . .  10
+     3.1.  Example: Request  . . . . . . . . . . . . . . . . . . . .  10
      3.2.  Example: Response . . . . . . . . . . . . . . . . . . . .  10
    4.  Message Processing  . . . . . . . . . . . . . . . . . . . . .  11
      4.1.  Protecting the Request  . . . . . . . . . . . . . . . . .  11
@@ -518,7 +518,7 @@ Internet-Draft     Secure group communication for CoAP        March 2018
 
                       Figure 2: Object-Security Value
 
-3.1.  Examples: Request
+3.1.  Example: Request
 
    Request with kid = 0x25, Partial IV = 5 and kid context = 0x44616c,
    assuming the label for the new kid context defined in
