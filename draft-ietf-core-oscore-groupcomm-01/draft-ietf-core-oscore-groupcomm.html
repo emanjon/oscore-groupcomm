@@ -1,0 +1,1126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>Secure group communication for CoAP</title>
+
+  
+<style type="text/css">/*<![CDATA[*/
+@viewport {
+  zoom: 1.0;
+  width: extend-to-zoom;
+}
+@-ms-viewport {
+  width: extend-to-zoom;
+  zoom: 1.0;
+}
+
+@media screen and (min-width: 1024px) {
+  body>ul.toc, body>#rfc\.toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 550px);
+    width: 300px;
+    z-index: 1;
+  }
+  #rfc\.toc {
+    top: 55px;
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  ul.toc, #rfc\.toc {
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  body>ul.toc {
+    top: 140px;
+  }
+
+  body {
+    padding-right: 350px;
+  }
+}
+
+body {
+  font: 16px "Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #333;
+  font-size-adjust: 0.5;
+  line-height: 24px;
+  margin: 75px auto;
+  max-width: 724px;
+}
+
+.title, .filename, h1, h2, h3, h4 {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size-adjust: 0.5;
+  font-weight: 500;
+  color: #333;
+  line-height: 100%;
+  margin: 0.8em 0 0.3em;
+}
+.title { font-size: 36px; }
+h1 { font-size: 36px; }
+h2 { font-size: 24px; }
+h3, h4 { font-size: 18px; }
+h1 a[href], h2 a[href], h3 a[href], h4 a[href] {
+  color: #333;
+}
+
+ul.toc li {
+  list-style: none;
+  text-indent: -2.5em;
+  padding-left: 2.5em;
+  padding-bottom: 5px;
+  margin: 0;
+}
+ul.toc ul {
+  margin: 0;
+}
+/* xml2rfc nests ul directly inside ul which messes with the style badly */
+ul.toc, ul.toc>ul, ul.toc ul>ul {
+  margin: 0 0 0 1.5em;
+}
+
+table {
+  margin-left: 0em;
+  border-collapse: collapse;
+}
+th {
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+}
+td {
+  border-top: 1px solid #ddd;
+  vertical-align: top;
+}
+tr:nth-child(2n+1) > td,
+tr:nth-child(2n+1) > th {
+  background-color: #f9f9f9;
+}
+td.reference {
+  max-width: 200px;
+  border-top: none;
+  padding-right: 1em;
+}
+.right {
+  text-align: right;
+}
+
+
+table.header {
+  width: 100%;
+}
+table.header td {
+  border: none;
+  background-color: transparent;
+  color: black;
+}
+.filename {
+  color: rgb(119, 119, 119);
+  font-size: 23px;
+  font-weight: normal;
+  height: auto;
+  line-height: 100%;
+}
+#rfc\.abstract+p, #rfc\.abstract p {
+  font-size: 18px;
+  line-height: 27px%;
+}
+
+samp, tt, code, pre {
+  font: 11pt consolas, monospace;
+  font-size-adjust: none;
+}
+pre {
+  background-color: #eee;
+  border: 1px solid #ddd;
+  overflow-x: auto;
+  padding: 5px;
+  margin: 5px;
+}
+.figure {
+  font-style: italic;
+  margin: 0 1.5em;
+}
+
+address {
+  margin: 10px 0 0;
+}
+.vcard {
+  font-style: normal;
+}
+.vcardline {
+  display: block;
+}
+.vcardline .fn {
+  font-weight: bold;
+}
+.vcardline .hidden {
+  display: none;
+}
+
+dl {
+  margin-left: 1em;
+}
+dl.dl-horizontal: {
+  margin-left: 0;
+}
+dl > dt {
+  float: left;
+  margin-right: 1em;
+}
+dl.nohang > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .5em;
+}
+dl.compact > dd {
+  margin-bottom: 0em;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0em;
+}
+ul.empty {
+  list-style-type: none;
+}
+ul.empty li {
+  margin-top: .5em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+}
+hr.noprint {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+}
+a[href] {
+  color: #2a6496;
+}
+a[href]:hover {
+  background-color: #eee;
+}
+
+ol, ul, li, p {
+  padding: 0;
+  margin: 0.5em 0 0.5em 2em;
+}
+li, p {
+  margin-left: 0;
+}
+address {
+  font-style: normal;
+}
+
+.github-fork-ribbon-wrapper {
+  display: none;
+}
+@media screen and (min-width: 800px) {
+  /* "Fork me on GitHub" CSS ribbon based on
+   * https://github.com/simonwhitaker/github-fork-ribbon-css
+   */
+  .github-fork-ribbon {
+    position: absolute;
+    padding: 2px 0;
+    background-color: #a00;
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15));
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5);
+    font: 700 12px "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    pointer-events: auto;
+
+    top: 38px;
+    right: -45px;
+
+    transform: rotate(45deg);
+  }
+
+  .github-fork-ribbon a[href],
+  .github-fork-ribbon a[href]:hover {
+    color: #fff;
+    background-color: transparent;
+    text-decoration: none;
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.5);
+    text-align: center;
+
+    width: 190px;
+    line-height: 18px;
+
+    display: inline-block;
+    padding: 2px 0;
+
+    border: 1.5px dotted #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .github-fork-ribbon-wrapper {
+    display: block;
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    overflow: hidden;
+    top: 0; right: 0;
+    z-index: 2;
+    pointer-events: none;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .github-fork-ribbon-wrapper {
+    position: fixed;
+  }
+  /*]]>*/</style>
+
+
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.1.1" rel="Chapter" title="1.1 Terminology">
+<link href="#rfc.section.2" rel="Chapter" title="2 OSCORE Security Context">
+<link href="#rfc.section.2.1" rel="Chapter" title="2.1 Management of Group Keying Material">
+<link href="#rfc.section.3" rel="Chapter" title="3 The COSE Object">
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 Examples: Request">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 Example: Response">
+<link href="#rfc.section.4" rel="Chapter" title="4 Message Processing">
+<link href="#rfc.section.4.1" rel="Chapter" title="4.1 Protecting the Request">
+<link href="#rfc.section.4.2" rel="Chapter" title="4.2 Verifying the Request">
+<link href="#rfc.section.4.3" rel="Chapter" title="4.3 Protecting the Response">
+<link href="#rfc.section.4.4" rel="Chapter" title="4.4 Verifying the Response">
+<link href="#rfc.section.5" rel="Chapter" title="5 Synchronization of Sequence Numbers">
+<link href="#rfc.section.6" rel="Chapter" title="6 Responsibilities of the Group Manager">
+<link href="#rfc.section.7" rel="Chapter" title="7 Security Considerations">
+<link href="#rfc.section.7.1" rel="Chapter" title="7.1 Group-level Security">
+<link href="#rfc.section.8" rel="Chapter" title="8 IANA Considerations">
+<link href="#rfc.section.9" rel="Chapter" title="9 Acknowledgments">
+<link href="#rfc.references" rel="Chapter" title="10 References">
+<link href="#rfc.references.1" rel="Chapter" title="10.1 Normative References">
+<link href="#rfc.references.2" rel="Chapter" title="10.2 Informative References">
+<link href="#rfc.appendix.A" rel="Chapter" title="A Assumptions and Security Objectives">
+<link href="#rfc.appendix.A.1" rel="Chapter" title="A.1 Assumptions">
+<link href="#rfc.appendix.A.2" rel="Chapter" title="A.2 Security Objectives">
+<link href="#rfc.appendix.B" rel="Chapter" title="B List of Use Cases">
+<link href="#rfc.appendix.C" rel="Chapter" title="C Example of Group Identifier Format">
+<link href="#rfc.appendix.D" rel="Chapter" title="D Set-up of New Endpoints">
+<link href="#rfc.appendix.D.1" rel="Chapter" title="D.1 Join Process">
+<link href="#rfc.appendix.D.2" rel="Chapter" title="D.2 Provisioning and Retrieval of Public Keys">
+<link href="#rfc.appendix.D.3" rel="Chapter" title="D.3 Group Joining Based on the ACE Framework">
+<link href="#rfc.appendix.E" rel="Chapter" title="E Examples of Synchronization Approaches">
+<link href="#rfc.appendix.E.1" rel="Chapter" title="E.1 Best-Effort Synchronization">
+<link href="#rfc.appendix.E.2" rel="Chapter" title="E.2 Baseline Synchronization">
+<link href="#rfc.appendix.E.3" rel="Chapter" title="E.3 Challenge-Response Synchronization">
+<link href="#rfc.appendix.F" rel="Chapter" title="F No Verification of Signatures">
+<link href="#rfc.authors" rel="Chapter">
+
+
+  <meta name="generator" content="xml2rfc version 2.9.6 - https://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Tiloca, M., Selander, G., Palombini, F., and J. Park" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-ietf-core-oscore-groupcomm-latest" />
+  <meta name="dct.issued" scheme="ISO8601" content="2018-03-05" />
+  <meta name="dct.abstract" content="This document describes a mode for protecting group communication over the Constrained Application Protocol (CoAP). The proposed mode relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. In particular, it is defined how OSCORE should be used in a group communication setting, while fulfilling the same security requirements for request messages and related response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender endpoints and embedded in the protected CoAP messages." />
+  <meta name="description" content="This document describes a mode for protecting group communication over the Constrained Application Protocol (CoAP). The proposed mode relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. In particular, it is defined how OSCORE should be used in a group communication setting, while fulfilling the same security requirements for request messages and related response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender endpoints and embedded in the protected CoAP messages." />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+<td class="left">CoRE Working Group</td>
+<td class="right">M. Tiloca</td>
+</tr>
+<tr>
+<td class="left">Internet-Draft</td>
+<td class="right">RISE SICS AB</td>
+</tr>
+<tr>
+<td class="left">Intended status: Standards Track</td>
+<td class="right">G. Selander</td>
+</tr>
+<tr>
+<td class="left">Expires: September 6, 2018</td>
+<td class="right">F. Palombini</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">Ericsson AB</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">J. Park</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">Universitaet Duisburg-Essen</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">March 05, 2018</td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">Secure group communication for CoAP<br />
+  <span class="filename">draft-ietf-core-oscore-groupcomm-latest</span></p>
+  
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+<p>This document describes a mode for protecting group communication over the Constrained Application Protocol (CoAP). The proposed mode relies on Object Security for Constrained RESTful Environments (OSCORE) and the CBOR Object Signing and Encryption (COSE) format. In particular, it is defined how OSCORE should be used in a group communication setting, while fulfilling the same security requirements for request messages and related response messages. Source authentication of all messages exchanged within the group is ensured, by means of digital signatures produced through private keys of sender endpoints and embedded in the protected CoAP messages.</p>
+<h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on September 6, 2018.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+<p>Copyright (c) 2018 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<ul><li>1.1.   <a href="#rfc.section.1.1">Terminology</a>
+</li>
+</ul><li>2.   <a href="#rfc.section.2">OSCORE Security Context</a>
+</li>
+<ul><li>2.1.   <a href="#rfc.section.2.1">Management of Group Keying Material</a>
+</li>
+</ul><li>3.   <a href="#rfc.section.3">The COSE Object</a>
+</li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">Examples: Request</a>
+</li>
+<li>3.2.   <a href="#rfc.section.3.2">Example: Response</a>
+</li>
+</ul><li>4.   <a href="#rfc.section.4">Message Processing</a>
+</li>
+<ul><li>4.1.   <a href="#rfc.section.4.1">Protecting the Request</a>
+</li>
+<li>4.2.   <a href="#rfc.section.4.2">Verifying the Request</a>
+</li>
+<li>4.3.   <a href="#rfc.section.4.3">Protecting the Response</a>
+</li>
+<li>4.4.   <a href="#rfc.section.4.4">Verifying the Response</a>
+</li>
+</ul><li>5.   <a href="#rfc.section.5">Synchronization of Sequence Numbers</a>
+</li>
+<li>6.   <a href="#rfc.section.6">Responsibilities of the Group Manager</a>
+</li>
+<li>7.   <a href="#rfc.section.7">Security Considerations</a>
+</li>
+<ul><li>7.1.   <a href="#rfc.section.7.1">Group-level Security</a>
+</li>
+</ul><li>8.   <a href="#rfc.section.8">IANA Considerations</a>
+</li>
+<li>9.   <a href="#rfc.section.9">Acknowledgments</a>
+</li>
+<li>10.   <a href="#rfc.references">References</a>
+</li>
+<ul><li>10.1.   <a href="#rfc.references.1">Normative References</a>
+</li>
+<li>10.2.   <a href="#rfc.references.2">Informative References</a>
+</li>
+</ul><li>Appendix A.   <a href="#rfc.appendix.A">Assumptions and Security Objectives</a>
+</li>
+<ul><li>A.1.   <a href="#rfc.appendix.A.1">Assumptions</a>
+</li>
+<li>A.2.   <a href="#rfc.appendix.A.2">Security Objectives</a>
+</li>
+</ul><li>Appendix B.   <a href="#rfc.appendix.B">List of Use Cases</a>
+</li>
+<li>Appendix C.   <a href="#rfc.appendix.C">Example of Group Identifier Format</a>
+</li>
+<li>Appendix D.   <a href="#rfc.appendix.D">Set-up of New Endpoints</a>
+</li>
+<ul><li>D.1.   <a href="#rfc.appendix.D.1">Join Process</a>
+</li>
+<li>D.2.   <a href="#rfc.appendix.D.2">Provisioning and Retrieval of Public Keys</a>
+</li>
+<li>D.3.   <a href="#rfc.appendix.D.3">Group Joining Based on the ACE Framework</a>
+</li>
+</ul><li>Appendix E.   <a href="#rfc.appendix.E">Examples of Synchronization Approaches</a>
+</li>
+<ul><li>E.1.   <a href="#rfc.appendix.E.1">Best-Effort Synchronization</a>
+</li>
+<li>E.2.   <a href="#rfc.appendix.E.2">Baseline Synchronization</a>
+</li>
+<li>E.3.   <a href="#rfc.appendix.E.3">Challenge-Response Synchronization</a>
+</li>
+</ul><li>Appendix F.   <a href="#rfc.appendix.F">No Verification of Signatures</a>
+</li>
+<li><a href="#rfc.authors">Authors' Addresses</a>
+</li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> <a href="#intro" id="intro">Introduction</a>
+</h1>
+<p id="rfc.section.1.p.1">The Constrained Application Protocol (CoAP) <a href="#RFC7252" class="xref">[RFC7252]</a> is a web transfer protocol specifically designed for constrained devices and networks <a href="#RFC7228" class="xref">[RFC7228]</a>.</p>
+<p id="rfc.section.1.p.2">Group communication for CoAP <a href="#RFC7390" class="xref">[RFC7390]</a> addresses use cases where deployed devices benefit from a group communication model, for example to reduce latencies and improve performance. Use cases include lighting control, integrated building control, software and firmware updates, parameter and configuration updates, commissioning of constrained networks, and emergency multicast (see <a href="#sec-use-cases" class="xref">Appendix B</a>). Furthermore, <a href="#RFC7390" class="xref">[RFC7390]</a> recognizes the importance to introduce a secure mode for CoAP group communication. This specification defines such a mode.</p>
+<p id="rfc.section.1.p.3">Object Security for Constrained RESTful Environments (OSCORE)<a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a> describes a security protocol based on the exchange of protected CoAP messages. OSCORE builds on CBOR Object Signing and Encryption (COSE) <a href="#RFC8152" class="xref">[RFC8152]</a> and provides end-to-end encryption, integrity, and replay protection between a sending endpoint and a receiving endpoint possibly involving intermediary endpoints. To this end, a CoAP message is protected by including its payload (if any), certain options, and header fields in a COSE object, which finally replaces the authenticated and encrypted fields in the protected message.</p>
+<p id="rfc.section.1.p.4">This document describes group OSCORE, providing end-to-end security of CoAP messages exchanged between members of a group. In particular, the described approach defines how OSCORE should be used in a group communication setting, so that end-to-end security is assured by using the same security method. That is, end-to-end security is assured for multicast CoAP requests sent by multicaster endpoints to the group and for related CoAP responses sent as reply by multiple listener endpoints. Group OSCORE provides source authentication of all CoAP messages exchanged within the group, by means of digital signatures produced through private keys of sender devices and embedded in the protected CoAP messages. As in OSCORE, it is still possible to simultaneously rely on DTLS to protect hop-by-hop communication between a multicaster endpoint and a proxy (and vice versa), and between a proxy and a listener endpoint (and vice versa).</p>
+<h1 id="rfc.section.1.1">
+<a href="#rfc.section.1.1">1.1.</a> <a href="#terminology" id="terminology">Terminology</a>
+</h1>
+<p id="rfc.section.1.1.p.1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <a href="#RFC2119" class="xref">[RFC2119]</a><a href="#RFC8174" class="xref">[RFC8174]</a> when, and only when, they appear in all capitals, as shown here.</p>
+<p id="rfc.section.1.1.p.2">Readers are expected to be familiar with the terms and concepts described in CoAP <a href="#RFC7252" class="xref">[RFC7252]</a> including "endpoint", "sender" and "recipient"; group communication for CoAP <a href="#RFC7390" class="xref">[RFC7390]</a>; COSE and counter signatures <a href="#RFC8152" class="xref">[RFC8152]</a>.</p>
+<p id="rfc.section.1.1.p.3">Readers are also expected to be familiar with the terms and concepts for protection and processing of CoAP messages through OSCORE, such as "Security Context", "Master Secret" and "Master Salt", defined in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>.</p>
+<p id="rfc.section.1.1.p.4">Terminology for constrained environments, such as "constrained device", "constrained-node network", is defined in <a href="#RFC7228" class="xref">[RFC7228]</a>.</p>
+<p id="rfc.section.1.1.p.5">This document refers also to the following terminology.</p>
+<p></p>
+
+<ul>
+<li>Keying material: data that is necessary to establish and maintain secure communication among endpoints. This includes, for instance, keys and IVs <a href="#RFC4949" class="xref">[RFC4949]</a>.</li>
+<li>Group: a set of endpoints that share group keying material and parameters (Common Context of the group's Security Context, see <a href="#sec-context" class="xref">Section 2</a>). That is, the term group used in this specification refers to a "security group", not to be confused with network/multicast groups or application groups.</li>
+<li>Group Manager (GM): entity responsible for a set of OSCORE groups. Each endpoint in a group securely communicates with the respective GM, which is not required to be an actual group member and to take part in the group communication. The full list of responsibilities of the Group Manager is provided in <a href="#sec-group-manager" class="xref">Section 6</a>.</li>
+<li>Multicaster: member of a group that sends multicast CoAP request messages intended for all members of the group. In a 1-to-N communication model, only a single multicaster transmits data to the group; in an M-to-N communication model (where M and N do not necessarily have the same value), M group members are multicasters. According to <a href="#RFC7390" class="xref">[RFC7390]</a>, any possible proxy entity is supposed to know about the multicasters in the group and to not perform aggregation of response messages. Also, every multicaster expects and is able to handle multiple response messages associated to a given multicast request message that it has previously sent to the group.</li>
+<li>Listener: member of a group that receives multicast CoAP request messages when listening to the multicast IP address associated to the group. A listener may reply back, by sending a response message to the multicaster which has sent the request message.</li>
+<li>Pure listener: member of a group that is configured as listener and never replies back to multicasters after receiving request messages.</li>
+<li>Group ID: group identifier assigned to the group. Group IDs are unique within the set of groups of a same Group Manager.</li>
+<li>Endpoint ID: Sender ID of the endpoint, as defined in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>. An Endpoint ID is provided to an endpoint upon joining a group, is valid only within that group, and is unique within the same group. Endpoints which are configured only as pure listeners do not have an Endpoint ID.</li>
+<li>Group request: multicast CoAP request message sent by a multicaster in the group to all listeners in the group through multicast IP, unless otherwise specified.</li>
+<li>Source authentication: evidence that a received message in the group originated from a specifically identified group member. This also provides assurances that the message was not tampered with by a different group member or by a non-group member.</li>
+</ul>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> <a href="#sec-context" id="sec-context">OSCORE Security Context</a>
+</h1>
+<p id="rfc.section.2.p.1">To support group communication secured with OSCORE, each endpoint registered as member of a group maintains a Security Context as defined in Section 3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>. In particular, each endpoint in a group stores:</p>
+<p></p>
+
+<ol>
+<li>one Common Context, shared by all the endpoints in the group. All the endpoints in the group agree on the same COSE AEAD algorithm. In addition to what is defined in Section 3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, the Common Context includes the following information.  <ul>
+<li>Group Identifier (Gid). Variable length byte string identifying the Security Context. A Gid MUST have a random component and be long enough, in order to achieve a negligible probability of collisions between Group Identifiers from different Group Managers. A Group ID is used i) alone or together with other parameters, such as the multicast IP address of the group, to retrieve the OSCORE Security Context of the associated group (see <a href="#mess-processing" class="xref">Section 4</a>); and ii) as OSCORE Master Salt (see Section 3.1 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>). The choice of the Gid for a given group's Security Context is application specific. It is the role of the application to specify how to handle possible collisions. An example of specific formatting of the Group Identifier that would follow this specification is given in <a href="#gid-ex" class="xref">Appendix C</a>.</li>
+<li>Counter Signature Algorithm. Value identifying the algorithm used for source authenticating messages sent within the group, by means of a counter signature (see Section 4.5 of <a href="#RFC8152" class="xref">[RFC8152]</a>). Its value is immutable once the Common Context is established. All the endpoints in the group agree on the same counter signature algorithm. The list of supported signature algorithms is part of the group communication policy and MUST include the EdDSA signature algorithm ed25519 <a href="#RFC8032" class="xref">[RFC8032]</a>.</li>
+</ul>
+</li>
+<li>one Sender Context, unless the endpoint is configured exclusively as pure listener. The Sender Context is used to secure outgoing group messages and is initialized according to Section 3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, once the endpoint has joined the group. In practice, the symmetric keying material in the Sender Context of the sender endpoint is shared with all the recipient endpoints that have received group messages from that same sender endpoint. Besides, in addition to what is defined in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, the Sender Context stores also the endpoint's public-private key pair.</li>
+<li>one Recipient Context for each distinct endpoint from which group messages are received, used to process such incoming messages. The recipient endpoint creates a new Recipient Context upon receiving an incoming message from another endpoint in the group for the first time (see <a href="#ssec-verify-request" class="xref">Section 4.2</a> and <a href="#ssec-verify-response" class="xref">Section 4.4</a>). In practice, the symmetric keying material in a given Recipient Context of the recipient endpoint is shared with the associated sender endpoint from which group messages are received. Besides, in addition to what is defined in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, each Recipient Context stores also the public key of the associated other endpoint from which group messages are received.</li>
+</ol>
+<p id="rfc.section.2.p.3">The table in <a href="#fig-additional-context-information" class="xref">Figure 1</a> overviews the new information included in the OSCORE Security Context, with respect to what defined in Section 3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>.</p>
+<div id="rfc.figure.1"></div>
+<div id="fig-additional-context-information"></div>
+<pre>
+   +---------------------------+-----------------------------+
+   |      Context portion      |       New information       |
+   +---------------------------+-----------------------------+
+   |                           |                             |
+   |      Common Context       | Group Identifier (Gid)      |
+   |                           |                             |
+   |      Common Context       | Counter signature algorithm |
+   |                           |                             |
+   |      Sender Context       | Endpoint's private key      |
+   |                           |                             |
+   |      Sender Context       | Endpoint's public key       |
+   |                           |                             |
+   |  Each Recipient Context   | Public key of the           |
+   |                           | associated other endpoint   |
+   |                           |                             |
+   +---------------------------+-----------------------------+
+</pre>
+<p class="figure">Figure 1: Additions to the OSCORE Security Context</p>
+<p id="rfc.section.2.p.4">Upon receiving a secure CoAP message, a recipient endpoint relies on the sender endpoint's public key, in order to verify the counter signature conveyed in the COSE Object.</p>
+<p id="rfc.section.2.p.5">If not already stored in the Recipient Context associated to the sender endpoint, the recipient endpoint retrieves the public key from a trusted key repository. In such a case, the correct binding between the sender endpoint and the retrieved public key must be assured, for instance by means of public key certificates. Further discussion about how public keys can be handled and retrieved in the group is provided in <a href="#ssec-provisioning-of-public-keys" class="xref">Appendix D.2</a>.</p>
+<p id="rfc.section.2.p.6">The Sender Key/IV stored in the Sender Context and the Recipient Keys/IVs stored in the Recipient Contexts are derived according to the same scheme defined in Section 3.2 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>.</p>
+<h1 id="rfc.section.2.1">
+<a href="#rfc.section.2.1">2.1.</a> <a href="#sec-group-key-management" id="sec-group-key-management">Management of Group Keying Material</a>
+</h1>
+<p id="rfc.section.2.1.p.1">The approach described in this specification should take into account the risk of compromise of group members. In particular, the adoption of key management schemes for secure revocation and renewal of Security Contexts and group keying material should be considered.</p>
+<p id="rfc.section.2.1.p.2">Consistently with the security assumptions in <a href="#ssec-sec-assumptions" class="xref">Appendix A.1</a>, it is RECOMMENDED to adopt a group key management scheme, and securely distribute a new value for the Master Secret parameter of the group's Security Context, before a new joining endpoint is added to the group or after a currently present endpoint leaves the group. This is necessary in order to preserve backward security and forward security in the group.</p>
+<p id="rfc.section.2.1.p.3">In particular, a new Group Identifier (Gid) for that group and a new value for the Master Secret parameter must also be distributed. An example of Group Identifier format supporting this operation is provided in <a href="#gid-ex" class="xref">Appendix C</a>. Then, each group member re-derives the keying material stored in its own Sender Context and Recipient Contexts as described in <a href="#sec-context" class="xref">Section 2</a>, using the updated Group Identifier.</p>
+<p id="rfc.section.2.1.p.4">Especially in dynamic, large-scale, groups where endpoints can join and leave at any time, it is important that the considered group key management scheme is efficient and highly scalable with the group size, in order to limit the impact on performance due to the Security Context and keying material update.</p>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#sec-cose-object" id="sec-cose-object">The COSE Object</a>
+</h1>
+<p id="rfc.section.3.p.1">When creating a protected CoAP message, an endpoint in the group computes the COSE object using the untagged COSE_Encrypt0 structure <a href="#RFC8152" class="xref">[RFC8152]</a> as defined in Section 5 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, with the following modifications.</p>
+<p></p>
+
+<ul>
+<li>The value of the "kid" parameter in the "unprotected" field of response messagess SHALL be set to the Endpoint ID of the endpoint transmitting the message, i.e. the Sender ID.</li>
+<li>The "unprotected" field of the "Headers" field SHALL additionally include the following parameter:  <ul><li>CounterSignature0 : its value is set to the counter signature of the COSE object, computed by the endpoint by means of its own private key as described in Section 4.5 of <a href="#RFC8152" class="xref">[RFC8152]</a>. The presence of this parameter is explicitly signaled, by using the reserved sixth least significant bit of the first byte of flag bits in the value of the Object-Security option (see Section 6.1 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>).</li></ul>
+</li>
+<li>The Additional Authenticated Data (AAD) considered to compute the COSE object is extended, by adding the countersignature algorithm used to protect group messages. In particular, the "external_aad" defined in Section 5.4 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a> SHALL also include "alg_countersign", which contains the Counter Signature Algorithm from the Common Context (see <a href="#sec-context" class="xref">Section 2</a>).</li>
+</ul>
+<pre>
+external_aad = [
+   oscore_version : uint,
+   [alg_aead : int / tstr , alg_countersign : int / tstr],
+   request_kid : bstr,
+   request_piv : bstr,
+   options : bstr
+]
+</pre>
+<p></p>
+
+<ul><li>The OSCORE compression defined in Section 6 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a> is used, with the following additions for the encoding of the Object-Security option.  <ul>
+<li>The fourth least significant bit of the first byte of flag bits SHALL be set to 1, to indicate the presence of the "kid" parameter for both group requests and responses.</li>
+<li>The fifth least significant bit of the first byte of flag bits MUST be set to 1 for group requests, to indicate the presence of the kid context in the OSCORE payload. The kid context flag MAY be set to 1 for responses.</li>
+<li>The sixth least significant bit of the first byte of flag bits is originally marked as reserved in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a> and its usage is defined in this specification. This bit is set to 1 if the "CounterSignature0" parameter is present, or to 0 otherwise. In order to ensure source authentication of group messages as described in this specification, this bit SHALL be set to 1.</li>
+<li>The 'kid context' value encodes the Group Identifier value (Gid) of the group's Security Context.</li>
+<li>The following q bytes (q given by the Counter Signature Algorithm specified in the Security Context) encode the value of the "CounterSignature0" parameter including the counter signature of the COSE object.</li>
+<li>The remaining bytes in the Object-Security value encode the value of the "kid" parameter, which is always present both in group requests and in responses.</li>
+</ul>
+</li></ul>
+<div id="rfc.figure.2"></div>
+<div id="fig-option-value"></div>
+<pre>
+ 0 1 2 3 4 5 6 7 &lt;----------- n bytes -----------&gt; &lt;-- 1 byte --&gt;
++-+-+-+-+-+-+-+-+---------------------------------+--------------+
+|0 0|1|h|1|  n  |       Partial IV (if any)       |  s (if any)  |
++-+-+-+-+-+-+-+-+---------------------------------+--------------+
+
+&lt;------ s bytes ------&gt; &lt;--------- q bytes ---------&gt;
+-----------------------+-----------------------------+-----------+
+   kid context = Gid   |      CounterSignature0      |    kid    |
+-----------------------+-----------------------------+-----------+
+</pre>
+<p class="figure">Figure 2: Object-Security Value</p>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#examples-request" id="examples-request">Examples: Request</a>
+</h1>
+<p id="rfc.section.3.1.p.1">Request with kid = 0x25, Partial IV = 5 and kid context = 0x44616c, assuming the label for the new kid context defined in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a> has value 10. COUNTERSIGN is the CounterSignature0 byte string as described in <a href="#sec-cose-object" class="xref">Section 3</a> and is 64 bytes long in this example. The ciphertext in this example is 14 bytes long.</p>
+<p id="rfc.section.3.1.p.2">Before compression (96 bytes):</p>
+<pre>
+[
+h'',
+{ 4:h'25', 6:h'05', 10:h'44616c', 9:COUNTERSIGN },
+h'aea0155667924dff8a24e4cb35b9'
+]
+</pre>
+<p id="rfc.section.3.1.p.3">After compression (85 bytes):</p>
+<pre>
+Flag byte: 0b00111001 = 0x39
+
+Option Value: 39 05 03 44 61 6c COUNTERSIGN 25 (7 bytes + size of COUNTERSIGN)
+
+Payload: ae a0 15 56 67 92 4d ff 8a 24 e4 cb 35 b9 (14 bytes)
+</pre>
+<h1 id="rfc.section.3.2">
+<a href="#rfc.section.3.2">3.2.</a> <a href="#example-response" id="example-response">Example: Response</a>
+</h1>
+<p id="rfc.section.3.2.p.1">Response with kid = 0x52. COUNTERSIGN is the CounterSignature0 byte string as described in <a href="#sec-cose-object" class="xref">Section 3</a> and is 64 bytes long in this example. The ciphertext in this example is 14 bytes long.</p>
+<p id="rfc.section.3.2.p.2">Before compression (88 bytes):</p>
+<pre>
+[
+h'',
+{ 4:h'52', 9:COUNTERSIGN },
+h'60b035059d9ef5667c5a0710823b'
+]
+</pre>
+<p id="rfc.section.3.2.p.3">After compression (80 bytes):</p>
+<pre>
+Flag byte: 0b00101000 = 0x28
+
+Option Value: 28 COUNTERSIGN 52 (2 bytes + size of COUNTERSIGN)
+
+Payload: 60 b0 35 05 9d 9e f5 66 7c 5a 07 10 82 3b (14 bytes)
+</pre>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#mess-processing" id="mess-processing">Message Processing</a>
+</h1>
+<p id="rfc.section.4.p.1">Each request message and response message is protected and processed as specified in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, with the modifications described in the following sections. The following security objectives are fulfilled, as further discussed in <a href="#ssec-sec-objectives" class="xref">Appendix A.2</a>: data replay protection, group-level data confidentiality, source authentication, message integrity, and message ordering.</p>
+<p id="rfc.section.4.p.2">Furthermore, endpoints in the group locally perform error handling and processing of invalid messages according to the same principles adopted in <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>. However, a receiver endpoint MUST stop processing and silently reject any message which is malformed and does not follow the format specified in <a href="#sec-cose-object" class="xref">Section 3</a>, without sending back any error message. This prevents listener endpoints from sending multiple error messages to a multicaster endpoint, so avoiding the risk of flooding and possibly congesting the group.</p>
+<h1 id="rfc.section.4.1">
+<a href="#rfc.section.4.1">4.1.</a> <a href="#ssec-protect-request" id="ssec-protect-request">Protecting the Request</a>
+</h1>
+<p id="rfc.section.4.1.p.1">A multicaster endpoint transmits a secure group request as described in Section 8.1 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, with the following modifications.</p>
+<p></p>
+
+<ol>
+<li>The multicaster endpoint stores the association Token - Group Identifier. That is, it SHALL be able to find the correct Security Context used to protect the group request and verify the response(s) by using the CoAP Token used in the message exchange.</li>
+<li>The multicaster computes the COSE object as defined in <a href="#sec-cose-object" class="xref">Section 3</a> of this specification.</li>
+</ol>
+<h1 id="rfc.section.4.2">
+<a href="#rfc.section.4.2">4.2.</a> <a href="#ssec-verify-request" id="ssec-verify-request">Verifying the Request</a>
+</h1>
+<p id="rfc.section.4.2.p.1">Upon receiving a secure group request, a listener endpoint proceeds as described in Section 8.2 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, with the following modifications.</p>
+<p></p>
+
+<ol>
+<li>The listener endpoint retrieves the Group Identifier from the 'kid context' parameter of the received COSE object. Then, it uses the Group Identifier together with the destination IP address of the group request to identify the correct group's Security Context.</li>
+<li>The listener endpoint retrieves the Sender ID from the "kid" parameter of the received COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the multicaster endpoint and used to process the group request. When receiving a secure group request message from that multicaster endpoint for the first time, the listener endpoint creates a new Recipient Context, initializes it according to Section 3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, and includes the multicaster endpoint's public key.</li>
+<li>The listener endpoint retrieves the corresponding public key of the multicaster endpoint from the associated Recipient Context. Then, it verifies the counter signature and decrypts the group request.</li>
+</ol>
+<h1 id="rfc.section.4.3">
+<a href="#rfc.section.4.3">4.3.</a> <a href="#ssec-protect-response" id="ssec-protect-response">Protecting the Response</a>
+</h1>
+<p id="rfc.section.4.3.p.1">A listener endpoint that has received a secure group request may reply with a secure response, which is protected as described in Section 8.3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, with the following modifications.</p>
+<p></p>
+
+<ol><li>The listener endpoint computes the COSE object as defined in <a href="#sec-cose-object" class="xref">Section 3</a> of this specification.</li></ol>
+<h1 id="rfc.section.4.4">
+<a href="#rfc.section.4.4">4.4.</a> <a href="#ssec-verify-response" id="ssec-verify-response">Verifying the Response</a>
+</h1>
+<p id="rfc.section.4.4.p.1">Upon receiving a secure response message, a multicaster endpoint proceeds as described in Section 8.4 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, with the following modifications.</p>
+<p></p>
+
+<ol>
+<li>The multicaster endpoint retrieves the Security Context by using the Token of the received response message.</li>
+<li>The multicaster endpoint retrieves the Sender ID from the "kid" parameter of the received COSE object. Then, the Sender ID is used to retrieve the correct Recipient Context associated to the listener endpoint and used to process the response message. When receiving a secure response message from that listener endpoint for the first time, the multicaster endpoint creates a new Recipient Context, initializes it according to Section 3 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, and includes the listener endpoint's public key.</li>
+<li>The multicaster endpoint retrieves the corresponding public key of the listener endpoint from the associated Recipient Context. Then, it verifies the counter signature and decrypts the response message.</li>
+</ol>
+<p id="rfc.section.4.4.p.3">The mapping between response messages from listener endpoints and the associated group request from a multicaster endpoint relies on the pair (Sender ID, Partial IV) associated to the secure group request. This is used by listener endpoints as part of the Additional Authenticated Data when protecting their own response message, as described in <a href="#sec-cose-object" class="xref">Section 3</a>.</p>
+<h1 id="rfc.section.5">
+<a href="#rfc.section.5">5.</a> <a href="#sec-synch-seq-num" id="sec-synch-seq-num">Synchronization of Sequence Numbers</a>
+</h1>
+<p id="rfc.section.5.p.1">Upon joining the group, new listeners are not aware of the sequence number values currently used by different multicasters to transmit group requests. This means that, when such listeners receive a secure group request from a given multicaster for the first time, they are not able to verify if that request is fresh and has not been replayed. The same holds when a listener endpoint loses synchronization with sequence numbers of multicasters, for instance after a device reboot.</p>
+<p id="rfc.section.5.p.2">The exact way to address this issue depends on the specific use case and its synchronization requirements. The list of methods to handle synchronization of sequence numbers is part of the group communication policy, and different listener endpoints can use different methods. <a href="#synch-ex" class="xref">Appendix E</a> describes three possible approaches that can be considered.</p>
+<h1 id="rfc.section.6">
+<a href="#rfc.section.6">6.</a> <a href="#sec-group-manager" id="sec-group-manager">Responsibilities of the Group Manager</a>
+</h1>
+<p id="rfc.section.6.p.1">The Group Manager is responsible for performing the following tasks:</p>
+<p></p>
+
+<ul>
+<li>Creating and managing OSCORE groups. This includes the assignment of a Group ID to every newly created group, as well as ensuring uniqueness of Group IDs within the set of its OSCORE groups.</li>
+<li>Defining policies for authorizing the joining of its OSCORE groups. Such policies can be enforced by a third party, which is in a trust relation with the Group Manager and enforces join policies on behalf of the Group Manager.</li>
+<li>Driving the join process to add new endpoints as group members.</li>
+<li>Establishing Security Common Contexts and providing them to authorized group members during the join process, together with a corresponding Security Sender Context.</li>
+<li>Generating and managing Endpoint IDs within its OSCORE groups, as well as assigning and providing them to new endpoints during the join process. This includes ensuring uniqueness of Endpoints IDs within each of its OSCORE groups.</li>
+<li>Defining a set of supported signature algorithms as part of the communication policy of each of its OSCORE groups, and signalling it to new endpoints during the join process.</li>
+<li>Defining the methods to handle loss of synchronization with sequence numbers as part of the communication policy of each of its OSCORE groups, and signaling the one(s) to use to new endpoints during the join process.</li>
+<li>Renewing the Security Context of an OSCORE group upon membership change, by revoking and renewing common security parameters and keying material (rekeying).</li>
+<li>Providing the management keying material that a new endpoint requires to participate in the rekeying process, consistently with the key management scheme used in the group joined by the new endpoint.</li>
+<li>Updating the Group ID of its OSCORE groups, upon renewing the respective Security Context.</li>
+</ul>
+<p id="rfc.section.6.p.3">The Group Manager may additionally be responsible for the following tasks:</p>
+<p></p>
+
+<ul>
+<li>Acting as trusted key repository, in order to store the public keys of the members of its OSCORE groups, and provide such public keys to other members of the same group upon request. This specification recommends that the Group Manager is entrusted to perform this task.</li>
+<li>Acting as network router device where endpoints register to correctly receive group messages sent to the multicast IP address of that group.</li>
+<li>Autonomously and locally enforcing access policies to authorize new endpoints to join its OSCORE groups.</li>
+</ul>
+<h1 id="rfc.section.7">
+<a href="#rfc.section.7">7.</a> <a href="#sec-security-considerations" id="sec-security-considerations">Security Considerations</a>
+</h1>
+<p id="rfc.section.7.p.1">The same security considerations from OSCORE (Section 11 of <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>) apply to this specification. Additional security aspects to be taken into account are discussed below.</p>
+<h1 id="rfc.section.7.1">
+<a href="#rfc.section.7.1">7.1.</a> <a href="#ssec-group-level-security" id="ssec-group-level-security">Group-level Security</a>
+</h1>
+<p id="rfc.section.7.1.p.1">The approach described in this document relies on commonly shared group keying material to protect communication within a group. This means that messages are encrypted at a group level (group-level data confidentiality), i.e. they can be decrypted by any member of the group, but not by an external adversary or other external entities.</p>
+<p id="rfc.section.7.1.p.2">In addition, it is required that all group members are trusted, i.e. they do not forward the content of group messages to unauthorized entities. However, in many use cases, the devices in the group belong to a common authority and are configured by a commissioner (see <a href="#sec-use-cases" class="xref">Appendix B</a>).</p>
+<h1 id="rfc.section.8">
+<a href="#rfc.section.8">8.</a> <a href="#iana" id="iana">IANA Considerations</a>
+</h1>
+<p id="rfc.section.8.p.1">This document has no actions for IANA.</p>
+<h1 id="rfc.section.9">
+<a href="#rfc.section.9">9.</a> <a href="#acknowldegment" id="acknowldegment">Acknowledgments</a>
+</h1>
+<p id="rfc.section.9.p.1">The authors sincerely thank Stefan Beck, Rolf Blom, Carsten Bormann, Esko Dijk, Klaus Hartke, Richard Kelsey, John Mattsson, Jim Schaad, Ludwig Seitz and Peter van der Stok for their feedback and comments.</p>
+<p id="rfc.section.9.p.2">The work on this document has been partly supported by the EIT-Digital High Impact Initiative ACTIVE.</p>
+<h1 id="rfc.references">
+<a href="#rfc.references">10.</a> References</h1>
+<h1 id="rfc.references.1">
+<a href="#rfc.references.1">10.1.</a> Normative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="I-D.ietf-core-object-security">[I-D.ietf-core-object-security]</b></td>
+<td class="top">
+<a>Selander, G.</a>, <a>Mattsson, J.</a>, <a>Palombini, F.</a> and <a>L. Seitz</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-object-security-08">Object Security for Constrained RESTful Environments (OSCORE)</a>", Internet-Draft draft-ietf-core-object-security-08, January 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2119">[RFC2119]</b></td>
+<td class="top">
+<a>Bradner, S.</a>, "<a href="https://tools.ietf.org/html/rfc2119">Key words for use in RFCs to Indicate Requirement Levels</a>", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7252">[RFC7252]</b></td>
+<td class="top">
+<a>Shelby, Z.</a>, <a>Hartke, K.</a> and <a>C. Bormann</a>, "<a href="https://tools.ietf.org/html/rfc7252">The Constrained Application Protocol (CoAP)</a>", RFC 7252, DOI 10.17487/RFC7252, June 2014.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8032">[RFC8032]</b></td>
+<td class="top">
+<a>Josefsson, S.</a> and <a>I. Liusvaara</a>, "<a href="https://tools.ietf.org/html/rfc8032">Edwards-Curve Digital Signature Algorithm (EdDSA)</a>", RFC 8032, DOI 10.17487/RFC8032, January 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8152">[RFC8152]</b></td>
+<td class="top">
+<a>Schaad, J.</a>, "<a href="https://tools.ietf.org/html/rfc8152">CBOR Object Signing and Encryption (COSE)</a>", RFC 8152, DOI 10.17487/RFC8152, July 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8174">[RFC8174]</b></td>
+<td class="top">
+<a>Leiba, B.</a>, "<a href="https://tools.ietf.org/html/rfc8174">Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</a>", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.references.2">
+<a href="#rfc.references.2">10.2.</a> Informative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="I-D.ietf-ace-dtls-authorize">[I-D.ietf-ace-dtls-authorize]</b></td>
+<td class="top">
+<a>Gerdes, S.</a>, <a>Bergmann, O.</a>, <a>Bormann, C.</a>, <a>Selander, G.</a> and <a>L. Seitz</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-dtls-authorize-02">Datagram Transport Layer Security (DTLS) Profiles for Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-dtls-authorize-02, October 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-ace-oauth-authz">[I-D.ietf-ace-oauth-authz]</b></td>
+<td class="top">
+<a>Seitz, L.</a>, <a>Selander, G.</a>, <a>Wahlstroem, E.</a>, <a>Erdtman, S.</a> and <a>H. Tschofenig</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-oauth-authz-10">Authentication and Authorization for Constrained Environments (ACE)</a>", Internet-Draft draft-ietf-ace-oauth-authz-10, February 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-ace-oscore-profile">[I-D.ietf-ace-oscore-profile]</b></td>
+<td class="top">
+<a>Seitz, L.</a>, <a>Palombini, F.</a> and <a>M. Gunnarsson</a>, "<a href="https://tools.ietf.org/html/draft-ietf-ace-oscore-profile-00">OSCORE profile of the Authentication and Authorization for Constrained Environments Framework</a>", Internet-Draft draft-ietf-ace-oscore-profile-00, December 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.ietf-core-echo-request-tag">[I-D.ietf-core-echo-request-tag]</b></td>
+<td class="top">
+<a>Amsuess, C.</a>, <a>Mattsson, J.</a> and <a>G. Selander</a>, "<a href="https://tools.ietf.org/html/draft-ietf-core-echo-request-tag-00">Echo and Request-Tag</a>", Internet-Draft draft-ietf-core-echo-request-tag-00, October 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.palombini-ace-key-groupcomm">[I-D.palombini-ace-key-groupcomm]</b></td>
+<td class="top">
+<a>Palombini, F.</a> and <a>M. Tiloca</a>, "<a href="https://tools.ietf.org/html/draft-palombini-ace-key-groupcomm-00">Key Provisioning for Group Communication using ACE</a>", Internet-Draft draft-palombini-ace-key-groupcomm-00, March 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.somaraju-ace-multicast">[I-D.somaraju-ace-multicast]</b></td>
+<td class="top">
+<a>Somaraju, A.</a>, <a>Kumar, S.</a>, <a>Tschofenig, H.</a> and <a>W. Werner</a>, "<a href="https://tools.ietf.org/html/draft-somaraju-ace-multicast-02">Security for Low-Latency Group Communication</a>", Internet-Draft draft-somaraju-ace-multicast-02, October 2016.</td>
+</tr>
+<tr>
+<td class="reference"><b id="I-D.tiloca-ace-oscoap-joining">[I-D.tiloca-ace-oscoap-joining]</b></td>
+<td class="top">
+<a>Tiloca, M.</a> and <a>J. Park</a>, "<a href="https://tools.ietf.org/html/draft-tiloca-ace-oscoap-joining-02">Joining of OSCORE multicast groups in ACE</a>", Internet-Draft draft-tiloca-ace-oscoap-joining-02, October 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2093">[RFC2093]</b></td>
+<td class="top">
+<a>Harney, H.</a> and <a>C. Muckenhirn</a>, "<a href="https://tools.ietf.org/html/rfc2093">Group Key Management Protocol (GKMP) Specification</a>", RFC 2093, DOI 10.17487/RFC2093, July 1997.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2094">[RFC2094]</b></td>
+<td class="top">
+<a>Harney, H.</a> and <a>C. Muckenhirn</a>, "<a href="https://tools.ietf.org/html/rfc2094">Group Key Management Protocol (GKMP) Architecture</a>", RFC 2094, DOI 10.17487/RFC2094, July 1997.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC2627">[RFC2627]</b></td>
+<td class="top">
+<a>Wallner, D.</a>, <a>Harder, E.</a> and <a>R. Agee</a>, "<a href="https://tools.ietf.org/html/rfc2627">Key Management for Multicast: Issues and Architectures</a>", RFC 2627, DOI 10.17487/RFC2627, June 1999.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC3376">[RFC3376]</b></td>
+<td class="top">
+<a>Cain, B.</a>, <a>Deering, S.</a>, <a>Kouvelas, I.</a>, <a>Fenner, B.</a> and <a>A. Thyagarajan</a>, "<a href="https://tools.ietf.org/html/rfc3376">Internet Group Management Protocol, Version 3</a>", RFC 3376, DOI 10.17487/RFC3376, October 2002.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC3740">[RFC3740]</b></td>
+<td class="top">
+<a>Hardjono, T.</a> and <a>B. Weis</a>, "<a href="https://tools.ietf.org/html/rfc3740">The Multicast Group Security Architecture</a>", RFC 3740, DOI 10.17487/RFC3740, March 2004.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC3810">[RFC3810]</b></td>
+<td class="top">
+<a>Vida, R.</a> and <a>L. Costa</a>, "<a href="https://tools.ietf.org/html/rfc3810">Multicast Listener Discovery Version 2 (MLDv2) for IPv6</a>", RFC 3810, DOI 10.17487/RFC3810, June 2004.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC4046">[RFC4046]</b></td>
+<td class="top">
+<a>Baugher, M.</a>, <a>Canetti, R.</a>, <a>Dondeti, L.</a> and <a>F. Lindholm</a>, "<a href="https://tools.ietf.org/html/rfc4046">Multicast Security (MSEC) Group Key Management Architecture</a>", RFC 4046, DOI 10.17487/RFC4046, April 2005.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC4301">[RFC4301]</b></td>
+<td class="top">
+<a>Kent, S.</a> and <a>K. Seo</a>, "<a href="https://tools.ietf.org/html/rfc4301">Security Architecture for the Internet Protocol</a>", RFC 4301, DOI 10.17487/RFC4301, December 2005.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC4535">[RFC4535]</b></td>
+<td class="top">
+<a>Harney, H.</a>, <a>Meth, U.</a>, <a>Colegrove, A.</a> and <a>G. Gross</a>, "<a href="https://tools.ietf.org/html/rfc4535">GSAKMP: Group Secure Association Key Management Protocol</a>", RFC 4535, DOI 10.17487/RFC4535, June 2006.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC4944">[RFC4944]</b></td>
+<td class="top">
+<a>Montenegro, G.</a>, <a>Kushalnagar, N.</a>, <a>Hui, J.</a> and <a>D. Culler</a>, "<a href="https://tools.ietf.org/html/rfc4944">Transmission of IPv6 Packets over IEEE 802.15.4 Networks</a>", RFC 4944, DOI 10.17487/RFC4944, September 2007.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC4949">[RFC4949]</b></td>
+<td class="top">
+<a>Shirey, R.</a>, "<a href="https://tools.ietf.org/html/rfc4949">Internet Security Glossary, Version 2</a>", FYI 36, RFC 4949, DOI 10.17487/RFC4949, August 2007.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6282">[RFC6282]</b></td>
+<td class="top">
+<a>Hui, J.</a> and <a>P. Thubert</a>, "<a href="https://tools.ietf.org/html/rfc6282">Compression Format for IPv6 Datagrams over IEEE 802.15.4-Based Networks</a>", RFC 6282, DOI 10.17487/RFC6282, September 2011.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6347">[RFC6347]</b></td>
+<td class="top">
+<a>Rescorla, E.</a> and <a>N. Modadugu</a>, "<a href="https://tools.ietf.org/html/rfc6347">Datagram Transport Layer Security Version 1.2</a>", RFC 6347, DOI 10.17487/RFC6347, January 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6749">[RFC6749]</b></td>
+<td class="top">
+<a>Hardt, D.</a>, "<a href="https://tools.ietf.org/html/rfc6749">The OAuth 2.0 Authorization Framework</a>", RFC 6749, DOI 10.17487/RFC6749, October 2012.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7228">[RFC7228]</b></td>
+<td class="top">
+<a>Bormann, C.</a>, <a>Ersue, M.</a> and <a>A. Keranen</a>, "<a href="https://tools.ietf.org/html/rfc7228">Terminology for Constrained-Node Networks</a>", RFC 7228, DOI 10.17487/RFC7228, May 2014.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC7390">[RFC7390]</b></td>
+<td class="top">
+<a>Rahman, A.</a> and <a>E. Dijk</a>, "<a href="https://tools.ietf.org/html/rfc7390">Group Communication for the Constrained Application Protocol (CoAP)</a>", RFC 7390, DOI 10.17487/RFC7390, October 2014.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.appendix.A">
+<a href="#rfc.appendix.A">Appendix A.</a> <a href="#sec-requirements" id="sec-requirements">Assumptions and Security Objectives</a>
+</h1>
+<p id="rfc.section.A.p.1">This section presents a set of assumptions and security objectives for the approach described in this document.</p>
+<h1 id="rfc.appendix.A.1">
+<a href="#rfc.appendix.A.1">A.1.</a> <a href="#ssec-sec-assumptions" id="ssec-sec-assumptions">Assumptions</a>
+</h1>
+<p id="rfc.section.A.1.p.1">The following assumptions are assumed to be already addressed and are out of the scope of this document.</p>
+<p></p>
+
+<ul>
+<li>Multicast communication topology: this document considers both 1-to-N (one multicaster and multiple listeners) and M-to-N (multiple multicasters and multiple listeners) communication topologies. The 1-to-N communication topology is the simplest group communication scenario that would serve the needs of a typical low-power and lossy network (LLN). Examples of use cases that benefit from secure group communication are provided in <a href="#sec-use-cases" class="xref">Appendix B</a>.</li>
+<li>Group size: security solutions for group communication should be able to adequately support different and possibly large groups. The group size is the current number of members in a group. In the use cases mentioned in this document, the number of multicasters (normally the controlling devices) is expected to be much smaller than the number of listeners (i.e. the controlled devices). A security solution for group communication that supports 1 to 50 multicasters would be able to properly cover the group sizes required for most use cases that are relevant for this document. The maximum group size is expected to be in the range of 2 to 100 devices. Groups larger than that should be divided into smaller independent groups, e.g. by grouping lights in a building on a per floor basis.</li>
+<li>Communication with the Group Manager: an endpoint must use a secure dedicated channel when communicating with the Group Manager, even when not registered as group member. In particular, communications with the Group Manager occuring during the join process to become a group member must also be secured.</li>
+<li>Establishment and management of Security Contexts: an OSCORE Security Context must be established among the group members. In particular, a Common Context must be provided to a new joining endpoint together with a corresponding Sender Context. On the other hand, Recipient Contexts are locally and individually derived by each group member. A secure mechanism must be used to generate, revoke and (re-)distribute keying material, multicast security policies and security parameters in the group. The actual establishment and management of the Security Context is out of the scope of this document, and it is anticipated that an activity in IETF dedicated to the design of a generic key management scheme will include this feature, preferably based on <a href="#RFC3740" class="xref">[RFC3740]</a><a href="#RFC4046" class="xref">[RFC4046]</a><a href="#RFC4535" class="xref">[RFC4535]</a>.</li>
+<li>Multicast data security ciphersuite: all group members must agree on a ciphersuite to provide authenticity, integrity and confidentiality of messages in the group. The ciphersuite is specified as part of the Security Context.</li>
+<li>Backward security: a new device joining the group should not have access to any old Security Contexts used before its joining. This ensures that a new group member is not able to decrypt confidential data sent before it has joined the group. The adopted key management scheme should ensure that the Security Context is updated to ensure backward confidentiality. The actual mechanism to update the Security Context and renew the group keying material upon a group member's joining has to be defined as part of the group key management scheme.</li>
+<li>Forward security: entities that leave the group should not have access to any future Security Contexts or message exchanged within the group after their leaving. This ensures that a former group member is not able to decrypt confidential data sent within the group anymore. Also, it ensures that a former member is not able to send encrypted and/or integrity protected messages to the group anymore. The actual mechanism to update the Security Context and renew the group keying material upon a group member's leaving has to be defined as part of the group key management scheme.</li>
+</ul>
+<h1 id="rfc.appendix.A.2">
+<a href="#rfc.appendix.A.2">A.2.</a> <a href="#ssec-sec-objectives" id="ssec-sec-objectives">Security Objectives</a>
+</h1>
+<p id="rfc.section.A.2.p.1">The approach described in this document aims at fulfilling the following security objectives:</p>
+<p></p>
+
+<ul>
+<li>Data replay protection: replayed group request messages or response messages must be detected.</li>
+<li>Group-level data confidentiality: messages sent within the group shall be encrypted if privacy sensitive data is exchanged within the group. This document considers group-level data confidentiality since messages are encrypted at a group level, i.e. in such a way that they can be decrypted by any member of the group, but not by an external adversary or other external entities.</li>
+<li>Source authentication: messages sent within the group shall be authenticated. That is, it is essential to ensure that a message is originated by a member of the group in the first place, and in particular by a specific member of the group.</li>
+<li>Message integrity: messages sent within the group shall be integrity protected. That is, it is essential to ensure that a message has not been tampered with by an external adversary or other external entities which are not group members.</li>
+<li>Message ordering: it must be possible to determine the ordering of messages coming from a single sender endpoint. In accordance with OSCORE <a href="#I-D.ietf-core-object-security" class="xref">[I-D.ietf-core-object-security]</a>, this results in providing relative freshness of group requests and absolute freshness of responses. It is not required to determine ordering of messages from different sender endpoints.</li>
+</ul>
+<h1 id="rfc.appendix.B">
+<a href="#rfc.appendix.B">Appendix B.</a> <a href="#sec-use-cases" id="sec-use-cases">List of Use Cases</a>
+</h1>
+<p id="rfc.section.B.p.1">Group Communication for CoAP <a href="#RFC7390" class="xref">[RFC7390]</a> provides the necessary background for multicast-based CoAP communication, with particular reference to low-power and lossy networks (LLNs) and resource constrained environments. The interested reader is encouraged to first read <a href="#RFC7390" class="xref">[RFC7390]</a> to understand the non-security related details. This section discusses a number of use cases that benefit from secure group communication. Specific security requirements for these use cases are discussed in <a href="#sec-requirements" class="xref">Appendix A</a>.</p>
+<p></p>
+
+<ul>
+<li>Lighting control: consider a building equipped with IP-connected lighting devices, switches, and border routers. The devices are organized into groups according to their physical location in the building. For instance, lighting devices and switches in a room or corridor can be configured as members of a single group. Switches are then used to control the lighting devices by sending on/off/dimming commands to all lighting devices in a group, while border routers connected to an IP network backbone (which is also multicast-enabled) can be used to interconnect routers in the building. Consequently, this would also enable logical groups to be formed even if devices in the lighting group may be physically in different subnets (e.g. on wired and wireless networks). Connectivity between lighting devices may be realized, for instance, by means of IPv6 and (border) routers supporting 6LoWPAN <a href="#RFC4944" class="xref">[RFC4944]</a><a href="#RFC6282" class="xref">[RFC6282]</a>. Group communication enables synchronous operation of a group of connected lights, ensuring that the light preset (e.g. dimming level or color) of a large group of luminaires are changed at the same perceived time. This is especially useful for providing a visual synchronicity of light effects to the user. As a practical guideline, events within a 200 ms interval are perceived as simultaneous by humans, which is necessary to ensure in many setups. Devices may reply back to the switches that issue on/off/dimming commands, in order to report about the execution of the requested operation (e.g. OK, failure, error) and their current operational status. In a typical lighting control scenario, a single switch is the only entity responsible for sending commands to a group of lighting devices. In more advanced lighting control use cases, a M-to-N communication topology would be required, for instance in case multiple sensors (presence or day-light) are responsible to trigger events to a group of lighting devices. Especially in professional lighting scenarios, the roles of multicaster and listener are configured by the lighting commissioner, and devices strictly follow those roles.</li>
+<li>Integrated building control: enabling Building Automation and Control Systems (BACSs) to control multiple heating, ventilation and air-conditioning units to pre-defined presets. Controlled units can be organized into groups in order to reflect their physical position in the building, e.g. devices in the same room can be configured as members of a single group. As a practical guideline, events within intervals of seconds are typically acceptable. Controlled units are expected to possibly reply back to the BACS issuing control commands, in order to report about the execution of the requested operation (e.g. OK, failure, error) and their current operational status.</li>
+<li>Software and firmware updates: software and firmware updates often comprise quite a large amount of data. This can overload a LLN that is otherwise typically used to deal with only small amounts of data, on an infrequent base. Rather than sending software and firmware updates as unicast messages to each individual device, multicasting such updated data to a larger group of devices at once displays a number of benefits. For instance, it can significantly reduce the network load and decrease the overall time latency for propagating this data to all devices. Even if the complete whole update process itself is secured, securing the individual messages is important, in case updates consist of relatively large amounts of data. In fact, checking individual received data piecemeal for tampering avoids that devices store large amounts of partially corrupted data and that they detect tampering hereof only after all data has been received. Devices receiving software and firmware updates are expected to possibly reply back, in order to provide a feedback about the execution of the update operation (e.g. OK, failure, error) and their current operational status.</li>
+<li>Parameter and configuration update: by means of multicast communication, it is possible to update the settings of a group of similar devices, both simultaneously and efficiently. Possible parameters are related, for instance, to network load management or network access controls. Devices receiving parameter and configuration updates are expected to possibly reply back, to provide a feedback about the execution of the update operation (e.g. OK, failure, error) and their current operational status.</li>
+<li>Commissioning of LLNs systems: a commissioning device is responsible for querying all devices in the local network or a selected subset of them, in order to discover their presence, and be aware of their capabilities, default configuration, and operating conditions. Queried devices displaying similarities in their capabilities and features, or sharing a common physical location can be configured as members of a single group. Queried devices are expected to reply back to the commissioning device, in order to notify their presence, and provide the requested information and their current operational status.</li>
+<li>Emergency multicast: a particular emergency related information (e.g. natural disaster) is generated and multicast by an emergency notifier, and relayed to multiple devices. The latters may reply back to the emergency notifier, in order to provide their feedback and local information related to the ongoing emergency. This kind of setups should additionally rely on a fault tolerance multicast algorithm, such as MPL.</li>
+</ul>
+<h1 id="rfc.appendix.C">
+<a href="#rfc.appendix.C">Appendix C.</a> <a href="#gid-ex" id="gid-ex">Example of Group Identifier Format</a>
+</h1>
+<p id="rfc.section.C.p.1">This section provides an example of how the Group Identifier (Gid) can be specifically formatted. That is, the Gid can be composed of two parts, namely a Group Prefix and a Group Epoch.</p>
+<p id="rfc.section.C.p.2">The Group Prefix is uniquely defined in the set of all the groups associated to the same Group Manager. The choice of the Group Prefix for a given group's Security Context is application specific. A Group Prefix is random, constant over time,  and long enough to achieve a negligible probability of collisions between Group Identifiers from different Group Managers. The size of the Group Prefix directly impact on the maximum number of distinct groups under the same Group Manager.</p>
+<p id="rfc.section.C.p.3">The Group Epoch is set to 0 upon the group's initialization, and is incremented by 1 upon completing each renewal of the Security Context and keying material in the group (see <a href="#sec-group-key-management" class="xref">Section 2.1</a>). In particular, once a new Master Secret has been distributed to the group, all the group members increment by 1 the Group Epoch in the Group Identifier of that group.</p>
+<p id="rfc.section.C.p.4">As an example, a 3-byte Group Identifier can be composed of: i) a 1-byte Group Prefix '0xb1' interpreted as a raw byte string; and ii) a 2-byte Group Epoch interpreted as an unsigned integer ranging from 0 to 65535. Then, after having established the Security Common Context 61532 times in the group, its Group Identifier will assume value '0xb1f05c'.</p>
+<h1 id="rfc.appendix.D">
+<a href="#rfc.appendix.D">Appendix D.</a> <a href="#setup" id="setup">Set-up of New Endpoints</a>
+</h1>
+<p id="rfc.section.D.p.1">An endpoint joins a group by explicitly interacting with the responsible Group Manager. Communications between a joining endpoint and the Group Manager rely on the CoAP protocol and must be secured. Specific details on how to secure communications between joining endpoints and a Group Manager are out of scope.</p>
+<p id="rfc.section.D.p.2">In order to receive multicast messages sent to the group, a joining endpoint has to register with a network router device <a href="#RFC3376" class="xref">[RFC3376]</a><a href="#RFC3810" class="xref">[RFC3810]</a>, signaling its intent to receive packets sent to the multicast IP address of that group. As a particular case, the Group Manager can also act as such a network router device. Upon joining the group, endpoints are not required to know how many and what endpoints are active in the same group.</p>
+<p id="rfc.section.D.p.3">Furthermore, in order to participate in the secure group communication, an endpoint needs to be properly initialized upon joining the group. In particular, the Group Manager provides keying material and parameters to a joining endpoint, which can then initialize its own Security Context (see <a href="#sec-context" class="xref">Section 2</a>).</p>
+<p id="rfc.section.D.p.4">The following <a href="#join-process" class="xref">Appendix D.1</a> provides an example describing how such information can be provided to an endpoint upon joining a group through the responsible Group Manager. Then, <a href="#ssec-provisioning-of-public-keys" class="xref">Appendix D.2</a> discusses how public keys of group members can be handled and made available to group members. Finally, <a href="#join-ACE-framework" class="xref">Appendix D.3</a> overviews how the ACE framework for Authentication and Authorization in constrained environments <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a> can be possibly used to support such a join process.</p>
+<h1 id="rfc.appendix.D.1">
+<a href="#rfc.appendix.D.1">D.1.</a> <a href="#join-process" id="join-process">Join Process</a>
+</h1>
+<p id="rfc.section.D.1.p.1">An endpoint requests to join a group by sending a confirmable CoAP POST request to the Group Manager responsible for that group. This join request can reflect the format of the Key Distribution Request message defined in Section 4.1 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>. Besides, it can be addressed to a CoAP resource associated to that group and carries the following information.</p>
+<p></p>
+
+<ul>
+<li>Group identifier: the Group Identifier (Gid) of the group, as known to the joining endpoint at this point in time. This may not fully coincide with the Gid currently associated to the group, e.g. if it includes a dynamic component. This information can be mapped to the first element of the "scope" parameter of the Key Distribution Request message defined in Section 4.1 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+<li>Role: the exact role of the joining endpoint in the group. Possible values are: "multicaster", "listener", "pure listener", "multicaster and listener", or "multicaster and pure listener". This information can be mapped to the second element of the "scope" parameter of the Key Distribution Request message defined in Section 4.1 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+<li>Retrieval flag: indication of interest to receive the public keys of the endpoints currently in the group, as included in the following join response. This flag must not be present if the Group Manager is not configured to store the public keys of group members, or if the joining endpoint is configured exclusively as pure listener for the group to join. This information can be mapped to the "get_pub_keys" parameter of the Key Distribution Request message defined in Section 4.1 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+<li>Identity credentials: information elements to enforce source authentication of group messages from the joining endpoint, such as its public key. The exact content depends on whether the Group Manager is configured to store the public keys of group members. If this is the case, this information is omitted if it has been provided to the same Group Manager upon previously joining the same or a different group under its control. This information is also omitted if the joining endpoint is configured exclusively as pure listener for the joined group. <a href="#ssec-provisioning-of-public-keys" class="xref">Appendix D.2</a> discusses additional details on provisioning of public keys and other information to enforce source authentication of joining endpoints's messages. This information can be mapped to the "client_cred" parameter of the Key Distribution Request message defined in Section 4.1 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+</ul>
+<p id="rfc.section.D.1.p.3">The Group Manager must be able to verify that the joining endpoint is authorized to become a member of the group. To this end, the Group Manager can directly authorize the joining endpoint, or expect it to provide authorization evidence previously obtained from a trusted entity. <a href="#join-ACE-framework" class="xref">Appendix D.3</a> describes how this can be achieved by leveraging the ACE framework for Authentication and Authorization in constrained environments <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>.</p>
+<p id="rfc.section.D.1.p.4">In case of successful authorization check, the Group Manager generates an Endpoint ID assigned to the joining endpoint, before proceeding with the rest of the join process. Instead, in case the authorization check fails, the Group Manager aborts the join process. Further details about the authorization of joining endpoint are out of scope.</p>
+<p id="rfc.section.D.1.p.5">As discussed in <a href="#sec-group-key-management" class="xref">Section 2.1</a>, it is recommended that the Security Context is renewed before the joining endpoint receives the group keying material and becomes a new active member of the group. This is achieved by securely distributing a new Master Secret and a new Group Identifier to the endpoints currently present in the same group.</p>
+<p id="rfc.section.D.1.p.6">Once renewed the Security Context in the group, the Group Manager replies to the joining endpoint with a CoAP response carrying the following information. This join response can reflect the format of the Key Distribution Response message defined in Section 4.2 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</p>
+<p></p>
+
+<ul>
+<li>Security Common Context: the OSCORE Security Common Context associated to the joined group (see <a href="#sec-context" class="xref">Section 2</a>). This information can be mapped to the "key" parameter of the Key Distribution Response message defined in Section 4.2 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+<li>Endpoint ID: the Endpoint ID associated to the joining endpoint. This information is not included in case "Role" in the join request is equal to "pure listener". This information can be mapped to the "clientID" parameter within the "key" parameter of the Key Distribution Response message defined in Section 4.2 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+<li>Member public keys: the public keys of the endpoints currently present in the group. This includes: the public keys of the non-pure listeners currently in the group, if the joining endpoint is configured (also) as multicaster; and the public keys of the multicasters currently in the group, if the joining endpoint is configured (also) as listener or pure listener. This information is omitted in case the Group Manager is not configured to store the public keys of group members or if the "Retrieval flag" was not present in the join request. <a href="#ssec-provisioning-of-public-keys" class="xref">Appendix D.2</a> discusses additional details on provisioning public keys upon joining the group and on retrieving public keys of group members. This information can be mapped to the "pub_keys" parameter of the Key Distribution Response message defined in Section 4.2 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+<li>Group policies: a list of key words indicating the particular policies enforced in the group. This includes, for instance, the list of supported signature algorithms and the method to achieve synchronization of sequence numbers among group members (see <a href="#synch-ex" class="xref">Appendix E</a>). This information can be mapped to the "group_policies" parameter of the Key Distribution Response message defined in Section 4.2 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+<li>Management keying material: the set of administrative keying material used to participate in the group rekeying process run by the Group Manager (see <a href="#sec-group-key-management" class="xref">Section 2.1</a>). The specific elements of this management keying material depend on the group rekeying protocol used in the group. For instance, this can simply consist in a group key encryption key and a pairwise symmetric key shared between the joining endpoint and the Group Manager, in case GKMP <a href="#RFC2093" class="xref">[RFC2093]</a><a href="#RFC2094" class="xref">[RFC2094]</a> is used. Instead, if key-tree based rekeying protocols like LKH <a href="#RFC2627" class="xref">[RFC2627]</a> are used, it can consist in the set of symmetric keys associated to the key-tree leaf representing the group member up to the key-tree root representing the group key encryption key. This information can be mapped to the "mgt_key_material" parameter of the Key Distribution Response message defined in Section 4.2 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+</ul>
+<h1 id="rfc.appendix.D.2">
+<a href="#rfc.appendix.D.2">D.2.</a> <a href="#ssec-provisioning-of-public-keys" id="ssec-provisioning-of-public-keys">Provisioning and Retrieval of Public Keys</a>
+</h1>
+<p id="rfc.section.D.2.p.1">As mentioned in <a href="#sec-group-manager" class="xref">Section 6</a>, it is recommended that the Group Manager acts as trusted key repository, so storing public keys of group members and providing them to other members of the same group upon request. In such a case, a joining endpoint provides its own public key to the Group Manager, as "Identity credentials" of the join request, when joining the group (see <a href="#join-process" class="xref">Appendix D.1</a>).</p>
+<p id="rfc.section.D.2.p.2">After that, the Group Manager should verify that the joining endpoint actually owns the associated private key, for instance by performing a proof-of-possession challenge-response, whose details are out of scope. In case of failure, the Group Manager performs up to a pre-defined maximum number of retries, after which it aborts the join process.</p>
+<p id="rfc.section.D.2.p.3">In case of successful challenge-response, the Group Manager stores the received public key as associated to the joining endpoint and its Endpoint ID. From then on, that public key will be available for secure and trusted delivery to other endpoints in the group. Finally, the Group Manager sends the join response to the joining endpoint, as described in <a href="#join-process" class="xref">Appendix D.1</a>.</p>
+<p id="rfc.section.D.2.p.4">The joining endpoint does not have to provide its own public key if that already occurred upon previously joining the same or a different group under the same Group Manager. However, separately for each group under its control, the Group Manager maintains an updated list of active Endpoint IDs associated to the respective endpoint's public key.</p>
+<p id="rfc.section.D.2.p.5">Instead, in case the Group Manager does not act as trusted key repository, the following exchange with the Group Manager can occur during the join process.</p>
+<p></p>
+
+<ol>
+<li>The joining endpoint signs its own certificate by using its own private key. The certificate includes also the identifier of the issuer Certification Authority (CA). There is no restriction on the Certificate Subject included in the joining endpoint's certificate.</li>
+<li>The joining endpoint specifies the signed certificate as "Identity credentials" in the join request (<a href="#join-process" class="xref">Appendix D.1</a>). The joining endpoint can optionally specify also a list of public key repositories storing its own certificate. In such a case, this information can be mapped to the "pub_keys_repos" parameter of the Key Distribution Request message defined in Section 4.1 of <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>.</li>
+<li>When processing the join request, the Group Manager first validates the certificate by verifying the signature of the issuer CA, and then verifies the signature of the joining endpoint.</li>
+<li>The Group Manager stores the association between the Certificate Subject of the joining endpoint's certificate and the pair {Group ID, Endpoint ID of the joining endpoint}. If received from the joining endpoint, the Group Manager also stores the list of public key repositories storing the certificate of the joining endpoint.</li>
+</ol>
+<p id="rfc.section.D.2.p.7">When a group member X wants to retrieve the public key of another group member Y in the same group, the endpoint X proceeds as follows.</p>
+<p></p>
+
+<ol>
+<li>The endpoint X contacts the Group Manager, specifying the pair {Group ID, Endpoint ID of the endpoint Y}.</li>
+<li>The Group Manager provides the endpoint X with the Certificate Subject CS from the certificate of endpoint Y. If available, the Group Manager provides the endpoint X also with the list of public key repositories storing the certificate of the endpoint Y.</li>
+<li>The endpoint X retrieves the certificate of the endpoint X from a key repository storing it, by using the Certificate Subject CS.</li>
+</ol>
+<h1 id="rfc.appendix.D.3">
+<a href="#rfc.appendix.D.3">D.3.</a> <a href="#join-ACE-framework" id="join-ACE-framework">Group Joining Based on the ACE Framework</a>
+</h1>
+<p id="rfc.section.D.3.p.1">The join process to register an endpoint as a new member of a group can be based on the ACE framework for Authentication and Authorization in constrained environments <a href="#I-D.ietf-ace-oauth-authz" class="xref">[I-D.ietf-ace-oauth-authz]</a>, built on re-use of OAuth 2.0 <a href="#RFC6749" class="xref">[RFC6749]</a>.</p>
+<p id="rfc.section.D.3.p.2">In particular, the approach described in <a href="#I-D.tiloca-ace-oscoap-joining" class="xref">[I-D.tiloca-ace-oscoap-joining]</a> uses the ACE framework to delegate the authentication and authorization of joining endpoints to an Authorization Server in a trust relation with the Group Manager. At the same time, it allows a joining endpoint to establish a secure channel with the Group Manager, by leveraging protocol-specific profiles of ACE, such as <a href="#I-D.ietf-ace-oscore-profile" class="xref">[I-D.ietf-ace-oscore-profile]</a> and <a href="#I-D.ietf-ace-dtls-authorize" class="xref">[I-D.ietf-ace-dtls-authorize]</a>, to achieve communication security, proof-of-possession and server authentication.</p>
+<p id="rfc.section.D.3.p.3">More specifically and with reference to the terminology defined in OAuth 2.0:</p>
+<p></p>
+
+<ul>
+<li>The joining endpoint acts as Client;</li>
+<li>The Group Manager acts as Resource Server, with different CoAP resources for different groups it is responsible for;</li>
+<li>An Authorization Server enables and enforces authorized access of the joining endpoint to the Group Manager and its CoAP resources paired with groups to join.</li>
+</ul>
+<p id="rfc.section.D.3.p.5">Messages exchanged among the participants follow the formats defined in <a href="#I-D.palombini-ace-key-groupcomm" class="xref">[I-D.palombini-ace-key-groupcomm]</a>. Both the joining endpoint and the Group Manager have to adopt secure communication also for any message exchange with the Authorization Server. To this end, different alternatives are possible, such as OSCORE, DTLS <a href="#RFC6347" class="xref">[RFC6347]</a> or IPsec <a href="#RFC4301" class="xref">[RFC4301]</a>.</p>
+<h1 id="rfc.appendix.E">
+<a href="#rfc.appendix.E">Appendix E.</a> <a href="#synch-ex" id="synch-ex">Examples of Synchronization Approaches</a>
+</h1>
+<p id="rfc.section.E.p.1">This section describes three possible approaches that can be considered by listener endpoints to synchronize with sequence numbers of multicasters.</p>
+<h1 id="rfc.appendix.E.1">
+<a href="#rfc.appendix.E.1">E.1.</a> <a href="#ssec-synch-best-effort" id="ssec-synch-best-effort">Best-Effort Synchronization</a>
+</h1>
+<p id="rfc.section.E.1.p.1">Upon receiving a multicast request from a multicaster, a listener endpoint does not take any action to synchonize with the sequence number of that multicaster. This provides no assurance at all as to message freshness, which can be acceptable in non-critical use cases.</p>
+<h1 id="rfc.appendix.E.2">
+<a href="#rfc.appendix.E.2">E.2.</a> <a href="#ssec-synch-baseline" id="ssec-synch-baseline">Baseline Synchronization</a>
+</h1>
+<p id="rfc.section.E.2.p.1">Upon receiving a multicast request from a given multicaster for the first time, a listener endpoint initializes its last-seen sequence number in its Recipient Context associated to that multicaster. However, the listener drops the multicast request without delivering it to the application layer. This provides a reference point to identify if future group requests from the same multicaster are fresher than the last one received.</p>
+<p id="rfc.section.E.2.p.2">A replay time interval exists, between when a possibly replayed message is originally transmitted by a given multicaster and the first authentic fresh message from that same multicaster is received. This can be acceptable for use cases where listener endpoints admit such a trade-off between performance and assurance of message freshness.</p>
+<h1 id="rfc.appendix.E.3">
+<a href="#rfc.appendix.E.3">E.3.</a> <a href="#ssec-synch-challenge-response" id="ssec-synch-challenge-response">Challenge-Response Synchronization</a>
+</h1>
+<p id="rfc.section.E.3.p.1">A listener endpoint performs a challenge-response exchange with a multicaster, by using the Repeat Option for CoAP described in Section 2 of <a href="#I-D.ietf-core-echo-request-tag" class="xref">[I-D.ietf-core-echo-request-tag]</a>.</p>
+<p id="rfc.section.E.3.p.2">That is, upon receiving a group request from a particular multicaster for the first time, the listener processes the message as described in <a href="#ssec-verify-request" class="xref">Section 4.2</a> of this specification, but, even if valid, does not deliver it to the application. Instead, the listener replies to the multicaster with a 4.03 Forbidden response message including a Repeat Option, and stores the option value included therein.</p>
+<p id="rfc.section.E.3.p.3">Upon receiving a 4.03 Forbidden response that includes a Repeat Option and originates from a verified group member, a multicaster sends a request as a unicast message addressed to the same listener, echoing the Repeat Option value. In particular, the multicaster does not necessarily resend the same group request, but can instead send a more recent one, if the application permits it. This makes it possible for the multicaster to not retain previously sent group requests for full retransmission, unless the application explicitly requires otherwise. In either case, the multicaster uses the sequence number value currently stored in its own Sender Context. If the multicaster stores group requests for possible retransmission with the Repeat Option, it should not store a given request for longer than a pre-configured time interval. Note that the unicast request echoing the Repeat Option is correctly treated and processed as a group message, since the 'kid context' field including the Group Identifier of the OSCORE group is still present in the Object-Security Option as part of the COSE object (see <a href="#sec-cose-object" class="xref">Section 3</a>).</p>
+<p id="rfc.section.E.3.p.4">Upon receiving the unicast request including the Repeat Option, the listener verifies that the option value equals the stored and previously sent value; otherwise, the request is silently discarded. Then, the listener verifies that the unicast request has been received within a pre-configured time interval, as described in <a href="#I-D.ietf-core-echo-request-tag" class="xref">[I-D.ietf-core-echo-request-tag]</a>. In such a case, the request is further processed and verified; otherwise, it is silently discarded. Finally, the listener updates the Recipient Context associated to that multicaster, by setting the Replay Window according to the Sequence Number from the unicast request conveying the Repeat Option. The listener either delivers the request to the application if it is an actual retransmission of the original one, or discards it otherwise. Mechanisms to signal whether the resent request is a full retransmission of the original one are out of the scope of this specification.</p>
+<p id="rfc.section.E.3.p.5">In case it does not receive a valid unicast request including the Repeat Option within the configured time interval, the listener endpoint should perform the same challenge-response upon receiving the next multicast request from that same multicaster.</p>
+<p id="rfc.section.E.3.p.6">A listener should not deliver group requests from a given multicaster to the application until one valid request from that same multicaster has been verified as fresh, as conveying an echoed Repeat Option <a href="#I-D.ietf-core-echo-request-tag" class="xref">[I-D.ietf-core-echo-request-tag]</a>. Also, a listener may perform the challenge-response described above at any time, if synchronization with sequence numbers of multicasters is (believed to be) lost, for instance after a device reboot. It is the role of the application to define under what circumstances sequence numbers lose synchronization. This can include a minimum gap between the sequence number of the latest accepted group request from a multicaster and the sequence number of a group request just received from the same multicaster. A multicaster has to be always ready to perform the challenge-response based on the Repeat Option in case a listener starts it.</p>
+<p id="rfc.section.E.3.p.7">Note that endpoints configured as pure listeners are not able to perform the challenge-response described above, as they do not store a Sender Context to secure the 4.03 Forbidden response to the multicaster. Therefore, pure listeners should adopt alternative approaches to achieve and maintain synchronization with sequence numbers of multicasters.</p>
+<p id="rfc.section.E.3.p.8">This approach provides an assurance of absolute message freshness. However, it can result in an impact on performance which is undesirable or unbearable, especially in large groups where many endpoints at the same time might join as new members or lose synchronization.</p>
+<h1 id="rfc.appendix.F">
+<a href="#rfc.appendix.F">Appendix F.</a> <a href="#sec-no-source-auth" id="sec-no-source-auth">No Verification of Signatures</a>
+</h1>
+<p id="rfc.section.F.p.1">There are some application scenarios using group communication that have particularly strict requirements. One example of this is the requirement of low message latency in non-emergency lighting applications <a href="#I-D.somaraju-ace-multicast" class="xref">[I-D.somaraju-ace-multicast]</a>. For those applications which have tight performance constraints and relaxed security requirements, it can be inconvenient for some endpoints to verify digital signatures in order to assert source authenticity of received group messages. In other cases, the signature verification can be deferred or only checked for specific actions. For instance, a command to turn a bulb on where the bulb is already on does not need the signature to be checked. In such situations, the counter signature needs to be included anyway as part of the group message, so that an endpoint that needs to validate the signature for any reason has the ability to do so.</p>
+<p id="rfc.section.F.p.2">In this specification, it is NOT RECOMMENDED that endpoints do not verify the counter signature of received group messages. However, it is recognized that there may be situations where it is not always required. The consequence of not doing the signature validation is that security in the group is based only on the group-authenticity of the shared keying material used for encryption. That is, endpoints in the group have evidence that a received message has been originated by a group member, although not specifically identifiable in a secure way. This can violate a number of security requirements, as the compromise of any element in the group means that the attacker has the ability to control the entire group. Even worse, the group may not be limited in scope, and hence the same keying material might be used not only for light bulbs but for locks as well. Therefore, extreme care must be taken in situations where the security requirements are relaxed, so that deployment of the system will always be done safely.</p>
+<h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Marco Tiloca</span> 
+	  <span class="n hidden">
+		<span class="family-name">Tiloca</span>
+	  </span>
+	</span>
+	<span class="org vcardline">RISE SICS AB</span>
+	<span class="adr">
+	  <span class="vcardline">Isafjordsgatan 22</span>
+
+	  <span class="vcardline">
+		<span class="locality">Kista</span>,  
+		<span class="region"></span>
+		<span class="code">SE-16440 Stockholm</span>
+	  </span>
+	  <span class="country-name vcardline">Sweden</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:marco.tiloca@ri.se">marco.tiloca@ri.se</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Goeran Selander</span> 
+	  <span class="n hidden">
+		<span class="family-name">Selander</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Ericsson AB</span>
+	<span class="adr">
+	  <span class="vcardline">Torshamnsgatan 23</span>
+
+	  <span class="vcardline">
+		<span class="locality">Kista</span>,  
+		<span class="region"></span>
+		<span class="code">SE-16440 Stockholm</span>
+	  </span>
+	  <span class="country-name vcardline">Sweden</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:goran.selander@ericsson.com">goran.selander@ericsson.com</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Francesca Palombini</span> 
+	  <span class="n hidden">
+		<span class="family-name">Palombini</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Ericsson AB</span>
+	<span class="adr">
+	  <span class="vcardline">Torshamnsgatan 23</span>
+
+	  <span class="vcardline">
+		<span class="locality">Kista</span>,  
+		<span class="region"></span>
+		<span class="code">SE-16440 Stockholm</span>
+	  </span>
+	  <span class="country-name vcardline">Sweden</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:francesca.palombini@ericsson.com">francesca.palombini@ericsson.com</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Jiye Park</span> 
+	  <span class="n hidden">
+		<span class="family-name">Park</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Universitaet Duisburg-Essen</span>
+	<span class="adr">
+	  <span class="vcardline">Schuetzenbahn 70</span>
+
+	  <span class="vcardline">
+		<span class="locality">Essen</span>,  
+		<span class="region"></span>
+		<span class="code">45127</span>
+	  </span>
+	  <span class="country-name vcardline">Germany</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:ji-ye.park@uni-due.de">ji-ye.park@uni-due.de</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>
